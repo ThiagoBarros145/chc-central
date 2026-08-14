@@ -1,0 +1,17 @@
+{
+  "name": "chc-central-api",
+  "version": "1.0.0",
+  "description": "API (Azure Functions) da CHC — Central de Coordenação",
+  "main": "src/functions/*.js",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"(sem testes ainda)\" && exit 0"
+  },
+  "dependencies": {
+    "@azure/functions": "^4.5.0",
+    "mssql": "^11.0.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
