@@ -9,9 +9,9 @@
 6. Inclusão dinâmica de múltiplos destinos
 7. Correções de layout mobile para Novo Voo
 -->
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#171d24"><title>V4 - CHC — Central de Coordenação</title><style>
-:root{--orange:#ff5a00;--ink:#171d24;--bg:#f5f6f7;--line:#e4e8eb;--muted:#78818b;--text:#1d242b;--green:#1eb36b;--shadow:0 12px 32px rgba(23,29,36,.07)}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}.logo{display:block;object-fit:contain}
-/* login */.login{min-height:100vh;background:linear-gradient(135deg,#171d24,#242c34 60%,#171d24);display:grid;grid-template-columns:360px 1fr}.login-side{display:flex;flex-direction:column;justify-content:center;padding:40px;border-right:1px solid #ffffff12;color:#fff}.login-side .logo{width:190px;margin:0 auto 28px}.login-side h1{text-align:center;font-size:17px;margin:0 0 6px}.login-side p{text-align:center;color:#aab2ba;font-size:12px;margin:0}.login-card{width:min(560px,calc(100vw - 40px));margin:auto;background:#fff;border-radius:24px;padding:30px;box-shadow:0 30px 80px #00000045}.steps{display:flex;align-items:center;gap:8px;margin-bottom:26px}.step{display:flex;align-items:center;gap:8px;color:#a0a8b0;font-size:10px;font-weight:900;white-space:nowrap}.step .num{width:28px;height:28px;border-radius:50%;background:#edf0f2;display:grid;place-items:center}.step.active,.step.done{color:var(--ink)}.step.active .num,.step.done .num{background:var(--orange);color:#fff}.step.done .num{font-size:0}.step.done .num:after{content:"✓";font-size:14px}.step-line{height:1px;background:#e0e3e6;flex:1}.login-card h2{font-size:20px;margin:0 0 7px}.intro{font-size:12px;color:var(--muted);margin:0 0 20px}.field{margin-bottom:14px}.field label{display:block;font-size:11px;font-weight:900;margin-bottom:7px;color:#4e5963;text-transform:uppercase}input,select{width:100%;border:1px solid #d9dee2;background:#fff;border-radius:11px;padding:13px 14px;outline:none}input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff5a001a}.base-list{display:grid;gap:8px}.base-option{border:1px solid #dfe3e6;border-radius:11px;padding:12px 13px;display:flex;justify-content:space-between;font-size:13px;font-weight:800;cursor:pointer}.base-option.selected,.base-option:hover{border-color:var(--orange);background:#fff8f3}.radio{width:17px;height:17px;border:1.5px solid #bfc6cc;border-radius:50%;position:relative}.selected .radio{border-color:var(--orange)}.selected .radio:after{content:"";position:absolute;inset:3px;background:var(--orange);border-radius:50%}.aircraft-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.aircraft{position:relative;border:1px solid #dfe3e6;background:#fff;border-radius:12px;padding:12px 11px;display:flex;gap:9px;align-items:center;font-size:12px;font-weight:900;cursor:pointer;transition:.15s;min-height:58px}.aircraft:hover{border-color:#ffc19e;transform:translateY(-1px)}.aircraft.selected{border-color:var(--orange);background:#fff7f2;box-shadow:0 0 0 2px #ff6a0015}.aircraft input{width:16px;height:16px;margin:0;accent-color:var(--orange);flex:0 0 auto}.aircraft-mark{display:none;color:var(--orange);font-size:14px;font-weight:950}.aircraft.selected .aircraft-mark{display:block}.aircraft small{display:block;color:#9099a1;font-size:9px;margin-top:2px;font-weight:700}@media(max-width:520px){.aircraft-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.aircraft{padding:10px 8px;font-size:11px}}.summary{background:#fff8f3;border:1px solid #ffd8c1;border-radius:12px;padding:14px;margin-top:12px}.tag{display:inline-block;background:#fff;border:1px solid #ffd0b6;color:#dc4e00;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;margin:4px 4px 0 0}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.btn{padding:12px 18px;border-radius:10px;font-size:11px;font-weight:900}.primary{background:linear-gradient(135deg,var(--orange),#ff6a00);color:#fff;box-shadow:0 9px 18px #ff5a0033}.secondary{background:#f0f2f4;color:#303a43}.login-note{font-size:10px;color:#8a929a;text-align:center;margin-top:13px}
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#171d24"><title>V4 - CHC — Central de Coordenação</title>
+  <script src="sharepoint-api-v2.js"></script>
+<style>  :root{--orange:#ff5a00;--ink:#171d24;}/* login */.login{min-height:100vh;background:linear-gradient(135deg,#171d24,#242c34 60%,#171d24);display:grid;grid-template-columns:360px 1fr}.login-side{display:flex;flex-direction:column;justify-content:center;padding:40px;border-right:1px solid #ffffff12;color:#fff}.login-side .logo{width:190px;margin:0 auto 28px}.login-side h1{text-align:center;font-size:17px;margin:0 0 6px}.login-side p{text-align:center;color:#aab2ba;font-size:12px;margin:0}.login-card{width:min(560px,calc(100vw - 40px));margin:auto;background:#fff;border-radius:24px;padding:30px;box-shadow:0 30px 80px #00000045}.steps{display:flex;align-items:center;gap:8px;margin-bottom:26px}.step{display:flex;align-items:center;gap:8px;color:#a0a8b0;font-size:10px;font-weight:900;white-space:nowrap}.step .num{width:28px;height:28px;border-radius:50%;background:#edf0f2;display:grid;place-items:center}.step.active,.step.done{color:var(--ink)}.step.active .num,.step.done .num{background:var(--orange);color:#fff}.step.done .num{font-size:0}.step.done .num:after{content:"✓";font-size:14px}.step-line{height:1px;background:#e0e3e6;flex:1}.login-card h2{font-size:20px;margin:0 0 7px}.intro{font-size:12px;color:var(--muted);margin:0 0 20px}.field{margin-bottom:14px}.field label{display:block;font-size:11px;font-weight:900;margin-bottom:7px;color:#4e5963;text-transform:uppercase}input,select{width:100%;border:1px solid #d9dee2;background:#fff;border-radius:11px;padding:13px 14px;outline:none}input:focus,select:focus{border-color:var(--orange);box-shadow:0 0 0 3px #ff5a001a}.base-list{display:grid;gap:8px}.base-option{border:1px solid #dfe3e6;border-radius:11px;padding:12px 13px;display:flex;justify-content:space-between;font-size:13px;font-weight:800;cursor:pointer}.base-option.selected,.base-option:hover{border-color:var(--orange);background:#fff8f3}.radio{width:17px;height:17px;border:1.5px solid #bfc6cc;border-radius:50%;position:relative}.selected .radio{border-color:var(--orange)}.selected .radio:after{content:"";position:absolute;inset:3px;background:var(--orange);border-radius:50%}.aircraft-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.aircraft{position:relative;border:1px solid #dfe3e6;background:#fff;border-radius:12px;padding:12px 11px;display:flex;gap:9px;align-items:center;font-size:12px;font-weight:900;cursor:pointer;transition:.15s;min-height:58px}.aircraft:hover{border-color:#ffc19e;transform:translateY(-1px)}.aircraft.selected{border-color:var(--orange);background:#fff7f2;box-shadow:0 0 0 2px #ff6a0015}.aircraft input{width:16px;height:16px;margin:0;accent-color:var(--orange);flex:0 0 auto}.aircraft-mark{display:none;color:var(--orange);font-size:14px;font-weight:950}.aircraft.selected .aircraft-mark{display:block}.aircraft small{display:block;color:#9099a1;font-size:9px;margin-top:2px;font-weight:700}@media(max-width:520px){.aircraft-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.aircraft{padding:10px 8px;font-size:11px}}.summary{background:#fff8f3;border:1px solid #ffd8c1;border-radius:12px;padding:14px;margin-top:12px}.tag{display:inline-block;background:#fff;border:1px solid #ffd0b6;color:#dc4e00;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;margin:4px 4px 0 0}.actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}.btn{padding:12px 18px;border-radius:10px;font-size:11px;font-weight:900}.primary{background:linear-gradient(135deg,var(--orange),#ff6a00);color:#fff;box-shadow:0 9px 18px #ff5a0033}.secondary{background:#f0f2f4;color:#303a43}.login-note{font-size:10px;color:#8a929a;text-align:center;margin-top:13px}
 /* app */.app{min-height:100vh;display:grid;grid-template-columns:226px 1fr}.sidebar{background:linear-gradient(180deg,#1b222a,#171d24);color:#fff;padding:26px 14px;display:flex;flex-direction:column;height:100vh;position:sticky;top:0}.side-logo{width:105px;margin:0 auto 34px;filter:brightness(0) invert(1)}.nav{display:grid;gap:5px}.nav button{background:transparent;color:#d7dce0;text-align:left;padding:12px 13px;border-radius:9px;font-size:12px;font-weight:800;display:flex;gap:11px;align-items:center}.nav button.active,.nav button:hover{background:var(--orange);color:#fff}.side-bottom{margin-top:auto;border-top:1px solid #ffffff12;padding-top:14px}.content{min-width:0}.top-date{font-size:11px;font-weight:900;color:var(--text);background:#f5f6f7;border:1px solid var(--line);border-radius:9px;padding:7px 10px;white-space:nowrap}
 .metar-bar{display:flex;align-items:center;gap:10px;background:#171d24;color:#fff;padding:9px 22px;font-size:11px;font-weight:800;white-space:nowrap;overflow-x:auto}
 .metar-bar .metar-tag{background:var(--orange);color:#fff;border-radius:6px;padding:3px 8px;font-size:9px;font-weight:950;letter-spacing:.5px;flex:0 0 auto}
@@ -560,66 +560,7 @@ body.compact-view .operation-card .operation-route {
      listFlights(base)            -> Promise<flight[]>
      createFlight(base, flight)   -> Promise<flight>
    ========================================================================== */
-const chcData=(function(){
-  const API_BASE='/api';
-
-  async function apiGet(path){
-    const res=await fetch(API_BASE+path,{headers:{'Accept':'application/json'}});
-    if(!res.ok) throw new Error('Falha ao buscar '+path+' ('+res.status+')');
-    return res.json();
-  }
-  async function apiSend(path,method,body){
-    const res=await fetch(API_BASE+path,{
-      method,
-      headers:{'Content-Type':'application/json'},
-      body:body!==undefined?JSON.stringify(body):undefined
-    });
-    if(!res.ok) throw new Error('Falha em '+method+' '+path+' ('+res.status+')');
-    if(res.status===204) return null;
-    return res.json();
-  }
-
-  function readLS(key,fallback){try{const v=JSON.parse(localStorage.getItem(key)||'null');return v===null?fallback:v}catch(e){return fallback}}
-  function writeLS(key,value){localStorage.setItem(key,JSON.stringify(value))}
-
-  return{
-    /* --- Sessão (coordenador/base/aeronaves selecionadas no login) ---
-       Continua local ao dispositivo: quem autentica de fato é o Entra ID
-       (Azure Static Web Apps), então isso é só o estado da tela de login. */
-    loadSession(){return readLS('chc:session',{name:'',base:'',aircraft:[]})},
-    saveSession(session){writeLS('chc:session',session)},
-    clearSession(){localStorage.removeItem('chc:session')},
-
-    /* --- Bases e aeronaves (Azure SQL, via Azure Functions) --- */
-    async listBases(){return apiGet('/bases')},
-    async listAircraft(){return apiGet('/aircraft')},
-
-    /* --- Voos (Azure SQL, via Azure Functions) --- */
-    async listFlights(base){
-      const qs=base?('?base='+encodeURIComponent(base)):'';
-      return apiGet('/flights'+qs);
-    },
-    async createFlight(base,flight){
-      return apiSend('/flights','POST',{...flight,base});
-    },
-    async updateFlight(base,original,flight){
-      const id=original?.id||flight.id;
-      if(!id) return null;
-      try{
-        return await apiSend('/flights/'+encodeURIComponent(id),'PUT',{...flight,base});
-      }catch(e){ console.error('updateFlight falhou:',e); return null; }
-    },
-    async deleteFlight(base,original){
-      const id=original?.id;
-      if(!id) return false;
-      try{
-        await apiSend('/flights/'+encodeURIComponent(id),'DELETE');
-        return true;
-      }catch(e){ console.error('deleteFlight falhou:',e); return false; }
-    }
-  };
-})();
-
+const chcData = window.SharePointAdapter;
 /* ==========================================================================
    ESTADO DE TELA
    ========================================================================== */
