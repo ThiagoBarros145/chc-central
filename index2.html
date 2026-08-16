@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHC Central de Coordenação — Acompanhamento de Voos</title>
+<style>
+  :root{
+    --orange:#FF5A1F;
+    --bg-dark:#0E1420;
+    --bg-dark-2:#151C2C;
+    --bg-light:#F4F6F8;
+    --card:#FFFFFF;
+    --text-dark:#1A2233;
+    --text-muted:#6B7688;
+    --border:#E4E8ED;
+    --green:#1FA463;
+    --green-bg:#E9F8F0;
+    --yellow:#E0A62B;
+    --yellow-bg:#FDF3E1;
+    --red:#E14B4B;
+    --red-bg:#FDECEC;
+    --blue:#2F6BFF;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:'Segoe UI', system-ui, -apple-system, sans-serif;
+    background:var(--bg-light);
+    color:var(--text-dark);
+    display:flex;
+    min-height:100vh;
+  }
+  .sidebar{
+    width:210px; background:var(--bg-dark); color:#fff;
+    display:flex; flex-direction:column; padding:24px 0; flex-shrink:0;
+  }
+  .brand{display:flex; align-items:center; gap:10px; padding:0 24px 28px 24px; font-weight:700; font-size:20px;}
+  .nav-item{display:flex; align-items:center; gap:12px; padding:12px 24px; color:#B7C0D1; font-size:14px; cursor:pointer; border-left:3px solid transparent;}
+  .nav-item:hover{background:rgba(255,255,255,0.05); color:#fff;}
+  .nav-item.active{background:var(--orange); color:#fff; border-left:3px solid #fff; font-weight:600;}
+  .nav-item .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+  .sidebar-footer{margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.08);}
+
+  .main{flex:1; display:flex; flex-direction:column; min-width:0;}
+  .topbar{display:flex; justify-content:space-between; align-items:center; padding:18px 28px 10px 28px;}
+  .greeting h1{font-size:20px; font-weight:700;}
+  .greeting p{font-size:12.5px; color:var(--text-muted); margin-top:3px;}
+  .user-chip{display:flex; align-items:center; gap:10px; font-size:13px;}
+  .avatar{width:34px;height:34px;border-radius:50%;background:#D9DEE6;}
+  .user-chip .uname{font-weight:600;}
+  .user-chip .usub{color:var(--text-muted); font-size:11.5px;}
+
+  .toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:0 28px 14px 28px; flex-wrap:wrap; gap:10px;
+  }
+  .stats-mini{display:flex; gap:10px; flex-wrap:wrap;}
+  .mini-stat{
+    background:var(--card); border:1px solid var(--border); border-radius:8px;
+    padding:7px 12px; font-size:12px; display:flex; align-items:center; gap:6px;
+  }
+  .mini-stat b{font-size:14px;}
+  .mini-stat.ok b{color:var(--green);} .mini-stat.trf b{color:var(--red);} .mini-stat.tot b{color:var(--orange);}
+  .toolbar-actions{display:flex; gap:8px; align-items:center;}
+  .btn-primary{background:var(--orange); color:#fff; border:none; padding:9px 16px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer;}
+  .btn-ghost-light{background:var(--card); border:1px solid var(--border); padding:9px 14px; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; color:var(--text-dark);}
+  .live{font-size:11px; color:var(--text-muted); display:flex; align-items:center; gap:5px;}
+  .live-dot{width:6px;height:6px;border-radius:50%;background:var(--green); animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%{opacity:1;}50%{opacity:.3;}100%{opacity:1;}}
+
+  .sheet-wrap{margin:0 28px 28px 28px; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:auto; flex:1;}
+  table{border-collapse:collapse; width:100%; font-size:12px; white-space:nowrap;}
+  thead th{
+    position:sticky; top:0; background:var(--bg-dark-2); color:#fff; z-index:2;
+    padding:9px 10px; text-align:left; font-weight:700; font-size:10.5px;
+    letter-spacing:.3px; text-transform:uppercase; border-right:1px solid rgba(255,255,255,0.08);
+  }
+  tbody td{
+    padding:6px 10px; border-bottom:1px solid var(--border); border-right:1px solid var(--border);
+    color:var(--text-dark);
+  }
+  tbody tr:hover td{background:#FAFBFC;}
+  .day-row td{
+    background:var(--bg-light); font-weight:700; font-size:12.5px;
+    color:var(--text-dark); padding:8px 10px; position:sticky; left:0;
+  }
+  .cell-input{
+    border:none; background:transparent; font-size:12px; width:100%; padding:2px 4px;
+    border-radius:4px; color:inherit; font-family:inherit;
+  }
+  .cell-input:focus{background:#FFF6EE; outline:1.5px solid var(--orange);}
+  .status-pill{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 8px; border-radius:20px;
+    font-size:10.5px; font-weight:700;
+  }
+  .status-ok{background:var(--green-bg); color:var(--green);}
+  .status-trf{background:var(--red-bg); color:var(--red);}
+  .status-atraso{background:var(--yellow-bg); color:var(--yellow);}
+  select.cell-input{cursor:pointer;}
+  .col-actions{text-align:center;}
+  .del-btn{background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:13px;}
+  .del-btn:hover{color:var(--red);}
+  .add-row-btn{
+    background:none; border:none; color:var(--orange); font-weight:700; font-size:11.5px;
+    cursor:pointer; padding:6px 10px;
+  }
+  .add-row-btn:hover{text-decoration:underline;}
+  ::-webkit-scrollbar{height:10px; width:10px;}
+  ::-webkit-scrollbar-thumb{background:#D5DAE1; border-radius:6px;}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="brand">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M2 16c4-6 14-10 20-10-2 5-8 9-14 10L2 16z" fill="#fff"/></svg>
+    CHC
+  </div>
+  <div class="nav-item"><span class="dot"></span> Painel</div>
+  <div class="nav-item active"><span class="dot"></span> Acompanhamento de Voos</div>
+  <div class="nav-item"><span class="dot"></span> Voos Finalizados</div>
+  <div class="nav-item"><span class="dot"></span> Histórico</div>
+  <div class="nav-item"><span class="dot"></span> Aeronaves</div>
+  <div class="nav-item"><span class="dot"></span> Relatórios</div>
+  <div class="nav-item"><span class="dot"></span> Configurações</div>
+  <div class="sidebar-footer"><div class="nav-item"><span class="dot"></span> Sair</div></div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <div class="greeting">
+      <h1 id="greetingText">Boa tarde, Thiago 👋</h1>
+      <p>Acompanhamento de Voos • SBMI</p>
+    </div>
+    <div class="user-chip">
+      <div class="avatar"></div>
+      <div><div class="uname">Thiago • Maricá</div><div class="usub">Central operacional</div></div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="stats-mini">
+      <div class="mini-stat tot">Total voos&nbsp;<b id="statTotal">0</b></div>
+      <div class="mini-stat ok">OK&nbsp;<b id="statOk">0</b></div>
+      <div class="mini-stat trf">TRF&nbsp;<b id="statTrf">0</b></div>
+      <div class="live"><span class="live-dot"></span>Atualizado <span id="updatedAgo">agora há pouco</span></div>
+    </div>
+    <div class="toolbar-actions">
+      <button class="btn-ghost-light" onclick="addDay()">+ Novo dia</button>
+      <button class="btn-primary" onclick="refreshData()">↻ Atualizar</button>
+    </div>
+  </div>
+
+  <div class="sheet-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:26px;">#</th>
+          <th>Status</th>
+          <th>ACFT</th>
+          <th>Cliente</th>
+          <th>Nº Voo</th>
+          <th>ETD</th>
+          <th>Rota</th>
+          <th>CP</th>
+          <th>FO</th>
+          <th>FA</th>
+          <th>PAX</th>
+          <th>Peso Total</th>
+          <th>Fuel Plan</th>
+          <th>Acio.</th>
+          <th>Dec.</th>
+          <th>Pouso</th>
+          <th>ATD</th>
+          <th>ETA</th>
+          <th>Código</th>
+          <th>Atraso (desc.)</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="sheetBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const statusOptions = [
+  {v:'ok', label:'OK', cls:'status-ok'},
+  {v:'trf', label:'TRF', cls:'status-trf'},
+  {v:'atraso', label:'ATRASO', cls:'status-atraso'},
+];
+
+let days = [
+  { date:'11 ago.', flights:[
+    {n:1, status:'ok', acft:'PS-VGM', cliente:'Petrobras', voo:'509449866', etd:'07:25', rota:'SBMI→P74→SBMI', cp:'F. Lima', fo:'C. Duarte', fa:'A. Rocha', pax:9, peso:1205, fuel:1060, acio:'07:20', dec:'07:41', pouso:'08:32', atd:'08:41', eta:'09:39', codigo:'', atrasoDesc:''},
+    {n:2, status:'ok', acft:'PS-LRR', cliente:'Petrobras', voo:'509450043', etd:'07:35', rota:'SBMI→UMAC→SBMI', cp:'A. Brum', fo:'R. Disney', fa:'', pax:9, peso:864, fuel:1110, acio:'07:50', dec:'07:57', pouso:'08:57', atd:'09:08', eta:'10:13', codigo:'', atrasoDesc:''},
+    {n:3, status:'trf', acft:'PR-BGU', cliente:'Petrobras', voo:'509450201', etd:'14:30', rota:'SBMI→UMTJ→SBMI', cp:'M. Sanada', fo:'A. César', fa:'', pax:10, peso:1004, fuel:1020, acio:'', dec:'', pouso:'', atd:'', eta:'', codigo:'MI', atrasoDesc:'Indisp. de aeronave por manutenção'},
+  ]},
+  { date:'12 ago.', flights:[
+    {n:1, status:'ok', acft:'PS-VGM', cliente:'Petrobras', voo:'509450684', etd:'06:55', rota:'SBMI→UMAC→SBMI', cp:'F. Lima', fo:'C. Duarte', fa:'', pax:5, peso:696, fuel:1080, acio:'06:32', dec:'06:40', pouso:'07:32', atd:'07:40', eta:'08:41', codigo:'', atrasoDesc:''},
+  ]},
+];
+
+function fmtNum(v){ return v===''||v==null ? '' : Number(v).toLocaleString('pt-BR'); }
+
+function renderStats(){
+  let total=0, ok=0, trf=0;
+  days.forEach(d=>d.flights.forEach(f=>{
+    total++;
+    if(f.status==='ok') ok++;
+    if(f.status==='trf') trf++;
+  }));
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statOk').textContent = ok;
+  document.getElementById('statTrf').textContent = trf;
+}
+
+function fieldInput(dayIdx, fIdx, field, value, width){
+  return `<input class="cell-input" style="${width?`width:${width}px;`:''}" value="${value??''}"
+    onchange="updateField(${dayIdx},${fIdx},'${field}',this.value)">`;
+}
+
+function renderSheet(){
+  const body = document.getElementById('sheetBody');
+  let html = '';
+  days.forEach((day, dayIdx)=>{
+    html += `<tr class="day-row"><td colspan="21">📅 ${dateInputRow(dayIdx, day.date)}
+      <button class="add-row-btn" onclick="addFlight(${dayIdx})">+ adicionar voo</button></td></tr>`;
+    day.flights.forEach((f, fIdx)=>{
+      const st = statusOptions.find(s=>s.v===f.status) || statusOptions[0];
+      html += `<tr>
+        <td>${fIdx+1}</td>
+        <td>${statusSelect(dayIdx, fIdx, f.status)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'acft',f.acft,70)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'cliente',f.cliente,90)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'voo',f.voo,90)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'etd',f.etd,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'rota',f.rota,130)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'cp',f.cp,100)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'fo',f.fo,100)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'fa',f.fa,90)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'pax',f.pax,40)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'peso',f.peso,65)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'fuel',f.fuel,65)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'acio',f.acio,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'dec',f.dec,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'pouso',f.pouso,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'atd',f.atd,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'eta',f.eta,55)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'codigo',f.codigo,45)}</td>
+        <td>${fieldInput(dayIdx,fIdx,'atrasoDesc',f.atrasoDesc,180)}</td>
+        <td class="col-actions"><button class="del-btn" onclick="delFlight(${dayIdx},${fIdx})">✕</button></td>
+      </tr>`;
+    });
+  });
+  body.innerHTML = html;
+  renderStats();
+}
+
+function dateInputRow(dayIdx, value){
+  return `<input class="cell-input" style="font-weight:700; width:80px; display:inline-block;" value="${value}"
+    onchange="updateDayDate(${dayIdx}, this.value)">`;
+}
+
+function statusSelect(dayIdx, fIdx, current){
+  return `<select class="cell-input" onchange="updateField(${dayIdx},${fIdx},'status',this.value)">
+    ${statusOptions.map(s=>`<option value="${s.v}" ${s.v===current?'selected':''}>${s.label}</option>`).join('')}
+  </select>`;
+}
+
+function updateField(dayIdx, fIdx, field, value){
+  days[dayIdx].flights[fIdx][field] = value;
+  if(field==='status') renderSheet();
+  else renderStats();
+  bumpUpdated();
+}
+function updateDayDate(dayIdx, value){ days[dayIdx].date = value; bumpUpdated(); }
+
+function addFlight(dayIdx){
+  const n = days[dayIdx].flights.length + 1;
+  days[dayIdx].flights.push({n, status:'ok', acft:'', cliente:'', voo:'', etd:'', rota:'', cp:'', fo:'', fa:'', pax:'', peso:'', fuel:'', acio:'', dec:'', pouso:'', atd:'', eta:'', codigo:'', atrasoDesc:''});
+  renderSheet();
+}
+function delFlight(dayIdx, fIdx){
+  days[dayIdx].flights.splice(fIdx,1);
+  renderSheet();
+}
+function addDay(){
+  days.push({date:'novo dia', flights:[]});
+  renderSheet();
+}
+
+let lastUpdate = new Date();
+function bumpUpdated(){ lastUpdate = new Date(); document.getElementById('updatedAgo').textContent='agora há pouco'; }
+function refreshData(){ bumpUpdated(); renderSheet(); }
+function tickUpdatedAgo(){
+  const secs = Math.floor((new Date()-lastUpdate)/1000);
+  const el = document.getElementById('updatedAgo');
+  if(secs<5) el.textContent='agora há pouco';
+  else if(secs<60) el.textContent=`há ${secs}s`;
+  else el.textContent=`há ${Math.floor(secs/60)} min`;
+}
+function setGreeting(){
+  const h = new Date().getHours();
+  const g = h<12?'Bom dia':(h<18?'Boa tarde':'Boa noite');
+  document.getElementById('greetingText').textContent = `${g}, Thiago 👋`;
+}
+
+setInterval(tickUpdatedAgo, 1000);
+setGreeting();
+renderSheet();
+</script>
+</body>
+</html>
